@@ -1,0 +1,12 @@
+# Temporary files
+*~
+*.swp
+
+# Python compiled files
+*.pyc
+
+# Vagrant local files
+.vagrant/*
+
+# Database
+db.sqlite3
