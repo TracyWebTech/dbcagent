@@ -38,9 +38,14 @@ class MasterDB(DB):
 
     def admin_all_slaves(self,execute):
         for slave in self.slaves:
+            master_data = "--master={}:{}@{}".format(self.user, self.password,
+                self.host)
+            slave_data = "--slave={}:{}@{}".format(slave.user, slave.password,
+                slave.host)
             rpl_user = "--rpl-user={}:{}".format(slave.user, slave.password)
-            others_args = [execute, rpl_user]
-            self.execute_slave("mysqlrpladmin", slave, others_args)
+
+            args = [master_data, slave_data, rpl_user, execute]
+            self.execute_slave("mysqlrpladmin", args)
 
     def check_all_slaves(self):
         for slave in self.slaves:
@@ -63,4 +68,7 @@ class MasterDB(DB):
             args = [master_data, slave_data, databases]
             self.execute_slave("mysqldbcompare", args)
 
+    def execute_slave(self, bin_command, args = []):
+        print("Running {} with:\n\t{}".format(bin_command, args))
+        command_to_run = [bin_command] + args
         call(command_to_run)
