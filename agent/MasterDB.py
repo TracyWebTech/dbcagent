@@ -3,8 +3,8 @@ from DB import DB
 
 
 class MasterDB(DB):
-    def __init__(self, host, user, password, log_file, log_position):
-        super(MasterDB, self).__init__(host, user, password, log_file, log_position)
+    def __init__(self, host, user, password, db, log_file, log_position):
+        super(MasterDB, self).__init__(host, user, password, db, log_file, log_position)
         self.slaves = []
 
     def update_slaves(self):
@@ -44,13 +44,23 @@ class MasterDB(DB):
 
     def check_all_slaves(self):
         for slave in self.slaves:
-            self.execute_slave("mysqlrplcheck", slave)
+            master_data = "--master={}:{}@{}".format(self.user, self.password,
+                self.host)
+            slave_data = "--slave={}:{}@{}".format(slave.user, slave.password,
+                slave.host)
 
-    def execute_slave(self, bin_command, slave, others_args = []):
-        master_data = "--master={}:{}@{}".format(self.user, self.password,
-            self.host)
-        slave_data = "--slave={}:{}@{}".format(slave.user, slave.password,
-            slave.host)
-        command_to_run = [bin_command, master_data, slave_data] + others_args
+            args = [master_data, slave_data]
+            self.execute_slave("mysqlrplcheck", args)
+
+    def compare_all_slaves(self):
+        for slave in self.slaves:
+            master_data = "--server1={}:{}@{}".format(self.user, self.password,
+                self.host)
+            slave_data = "--server2={}:{}@{}".format(slave.user, slave.password,
+                slave.host)
+            databases = "{}:{}".format(self.db, slave.db)
+
+            args = [master_data, slave_data, databases]
+            self.execute_slave("mysqldbcompare", args)
 
         call(command_to_run)

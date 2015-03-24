@@ -2,10 +2,11 @@ import json
 
 
 class DB(object):
-    def __init__(self, host, user, password, log_file, log_position):
+    def __init__(self, host, user, password, db, log_file, log_position):
         self.host = host
         self.user = user
         self.password = password
+        self.db = db
         self.log_file = log_file
         self.log_position = log_position
 
