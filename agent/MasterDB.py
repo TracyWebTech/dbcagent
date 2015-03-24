@@ -28,30 +28,29 @@ class MasterDB(DB):
 
 
     def start_all_slaves(self):
-        self.execute_all_slaves('start')
+        self.admin_all_slaves('start')
 
     def stop_all_slaves(self):
-        self.execute_all_slaves('stop')
+        self.admin_all_slaves('stop')
 
     def health_all_slaves(self):
-        self.execute_all_slaves('health')
+        self.admin_all_slaves('health')
 
-    def execute_all_slaves(self,execute):
+    def admin_all_slaves(self,execute):
         for slave in self.slaves:
-            call(["mysqlrpladmin",
-                 "--master={}:{}@{}".format(self.user, self.password,
-                     self.host),
-                 "--slave={}:{}@{}".format(slave.user, slave.password,
-                     slave.host), 
-                 "--rpl-user={}:{}".format(slave.user, slave.password),
-                 execute
-                ])
+            rpl_user = "--rpl-user={}:{}".format(slave.user, slave.password)
+            others_args = [execute, rpl_user]
+            self.execute_slave("mysqlrpladmin", slave, others_args)
 
     def check_all_slaves(self):
         for slave in self.slaves:
-            call(["mysqlrplcheck",
-                 "--master={}:{}@{}".format(self.user, self.password,
-                     self.host),
-                 "--slave={}:{}@{}".format(slave.user, slave.password,
-                     slave.host), 
-                ])
+            self.execute_slave("mysqlrplcheck", slave)
+
+    def execute_slave(self, bin_command, slave, others_args = []):
+        master_data = "--master={}:{}@{}".format(self.user, self.password,
+            self.host)
+        slave_data = "--slave={}:{}@{}".format(slave.user, slave.password,
+            slave.host)
+        command_to_run = [bin_command, master_data, slave_data] + others_args
+
+        call(command_to_run)
