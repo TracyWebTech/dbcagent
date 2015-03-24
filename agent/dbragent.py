@@ -4,10 +4,10 @@ from DB import DB
 
 
 def check(master):
+    print("Checking on master:\n\t{}".format(master))
     master.check_all_slaves()
 
 def health(master):
-    print("-"*50)
     print("Checking health on master:\n\t{}".format(master))
     master.health_all_slaves()
 
@@ -18,11 +18,11 @@ if __name__ == '__main__':
     password = '123456';
 
     host1 = '10.10.10.3';
-    log_file1 = 'mysql-bin.000006';
+    log_file1 = 'mysql-bin.000007';
     log_position1 = '1411';
 
     host2 = '10.10.10.4';
-    log_file2 = 'mysql-bin.000006';
+    log_file2 = 'mysql-bin.000007';
     log_position2 = '1757';
 
     master1 = MasterDB(host1, user, password, log_file1, log_position1)
@@ -48,5 +48,6 @@ if __name__ == '__main__':
 
     while True:
         health(master1)
-        health(master2)
+
+        check(master1)
 	sleep(10)
