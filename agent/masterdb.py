@@ -1,5 +1,7 @@
 from subprocess import call
-from DB import DB
+from subprocess import check_output
+import subprocess
+from db import DB
 
 
 class MasterDB(DB):
@@ -57,18 +59,35 @@ class MasterDB(DB):
             args = [master_data, slave_data]
             self.execute_slave("mysqlrplcheck", args)
 
+
     def compare_all_slaves(self):
         for slave in self.slaves:
             master_data = "--server1={}:{}@{}".format(self.user, self.password,
                 self.host)
             slave_data = "--server2={}:{}@{}".format(slave.user, slave.password,
                 slave.host)
+            difftype = "--difftype=unified"
+            output_format = "--format=vertical"
             databases = "{}:{}".format(self.db, slave.db)
 
-            args = [master_data, slave_data, databases]
+            args = [master_data, slave_data, difftype, output_format, databases]
             self.execute_slave("mysqldbcompare", args)
 
     def execute_slave(self, bin_command, args = []):
         print("Running {} with:\n\t{}".format(bin_command, args))
         command_to_run = [bin_command] + args
-        call(command_to_run)
+
+        result = ''
+        try:
+            result = subprocess.Popen(command_to_run, stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE)
+            print("--"*50)
+            output, error = result.communicate()
+            errorcode = result.returncode
+            if errorcode==0:
+                print("OK")
+            else:
+                print("[Saida:\n{}\n]".format(output))
+            print("--"*50)
+        except:
+            print("Error in command exection")

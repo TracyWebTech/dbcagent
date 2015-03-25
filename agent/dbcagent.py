@@ -1,6 +1,6 @@
 from time import sleep
-from MasterDB import MasterDB
-from DB import DB
+from masterdb import MasterDB
+from db import DB
 
 
 def check(master):
@@ -52,7 +52,7 @@ if __name__ == '__main__':
     print(master2.start_all_slaves())
 
     while True:
-        health(master1)
-        check(master1)
+        #health(master1)
+        #check(master1)
         compare(master1)
 	sleep(10)
