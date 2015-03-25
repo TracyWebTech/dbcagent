@@ -67,4 +67,7 @@ class MasterDB(DB):
             slave_data = comparison.get_comparison(self.db, slave.db)
             comparison_list.append(slave_data)
 
-        return comparison_list
+        master_dict = self.replication_info()
+        master_dict['slaves'] = comparison_list
+
+        return master_dict

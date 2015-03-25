@@ -34,7 +34,9 @@ class Comparison:
     def get_comparison(self, db1, db2):
         tables_status = self.compare(db1, db2)
         slave_data = self.slave.replication_info()
-        slave_data[db2] = tables_status
+        database = {}
+        database[db2] = tables_status
+        slave_data['databases'] = [database]
 
         return slave_data
 
