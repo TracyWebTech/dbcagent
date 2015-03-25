@@ -1,6 +1,7 @@
 from time import sleep
 from masterdb import MasterDB
 from db import DB
+import json
 
 
 def check(master):
@@ -11,7 +12,7 @@ def health(master):
 
 def compare(master):
     comp_list = master.compare_all_slaves()
-    print("Status: {}".format(comp_list))
+    return comp_list
 
 
 if __name__ == '__main__':
@@ -44,5 +45,7 @@ if __name__ == '__main__':
     print(master2.list_all_slaves())
 
     while True:
-        compare(master1)
+        comp_list = compare(master1)
+        json_comp = json.dumps(comp_list, sort_keys=True)
+        print("Status: {}".format(json_comp))
 	sleep(5)
