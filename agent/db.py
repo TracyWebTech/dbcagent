@@ -9,6 +9,10 @@ class DB(object):
         self.db = db
         self.log_file = log_file
         self.log_position = log_position
+        self.conn_status = "unknow"
+
+    def set_conn_status(status):
+        self.conn_status = conn_status
 
     def to_json(self):
         dic = {
@@ -19,6 +23,14 @@ class DB(object):
                 'log_position': self.log_position,
               }
         return json.dumps(dic)
+
+    def replication_info(self):
+        dic = {
+                'host': self.host,
+                'log_file': self.log_file,
+                'log_position': self.log_position,
+              }
+        return dic
 
     def __str__(self):
         return self.to_json()

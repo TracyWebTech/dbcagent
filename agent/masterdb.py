@@ -1,6 +1,6 @@
-from subprocess import call
-from DB import DB
-
+from db import DB
+from mysqltools import MySQLTools
+from comparison import Comparison
 
 class MasterDB(DB):
     def __init__(self, host, user, password, db, log_file, log_position):
@@ -45,7 +45,8 @@ class MasterDB(DB):
             rpl_user = "--rpl-user={}:{}".format(slave.user, slave.password)
 
             args = [master_data, slave_data, rpl_user, execute]
-            self.execute_slave("mysqlrpladmin", args)
+            mysqltools = MySQLTools()
+            mysqltools.execute("mysqlrpladmin", args)
 
     def check_all_slaves(self):
         for slave in self.slaves:
@@ -55,20 +56,15 @@ class MasterDB(DB):
                 slave.host)
 
             args = [master_data, slave_data]
-            self.execute_slave("mysqlrplcheck", args)
+            mysqltools = MySQLTools()
+            mysqltools.execute("mysqlrplcheck", args)
+
 
     def compare_all_slaves(self):
+        comparison_list = []
         for slave in self.slaves:
-            master_data = "--server1={}:{}@{}".format(self.user, self.password,
-                self.host)
-            slave_data = "--server2={}:{}@{}".format(slave.user, slave.password,
-                slave.host)
-            databases = "{}:{}".format(self.db, slave.db)
+            comparison = Comparison(self, slave)
+            slave_data = comparison.get_comparison(self.db, slave.db)
+            comparison_list.append(slave_data)
 
-            args = [master_data, slave_data, databases]
-            self.execute_slave("mysqldbcompare", args)
-
-    def execute_slave(self, bin_command, args = []):
-        print("Running {} with:\n\t{}".format(bin_command, args))
-        command_to_run = [bin_command] + args
-        call(command_to_run)
+        return comparison_list

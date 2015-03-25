@@ -1,19 +1,17 @@
 from time import sleep
-from MasterDB import MasterDB
-from DB import DB
+from masterdb import MasterDB
+from db import DB
 
 
 def check(master):
-    print("Checking on master:\n\t{}".format(master))
     master.check_all_slaves()
 
 def health(master):
-    print("Checking health on master:\n\t{}".format(master))
     master.health_all_slaves()
 
 def compare(master):
-    print("Compare database of master with slaves:\n\t{}\n".format(master))
-    master.compare_all_slaves()
+    comp_list = master.compare_all_slaves()
+    print("Status: {}".format(comp_list))
 
 
 if __name__ == '__main__':
@@ -45,14 +43,6 @@ if __name__ == '__main__':
     print("list slaves of master2")
     print(master2.list_all_slaves())
 
-    print("Starting all master1's slaves")
-    print(master1.start_all_slaves())
-
-    print("Starting all master2's slaves")
-    print(master2.start_all_slaves())
-
     while True:
-        health(master1)
-        check(master1)
         compare(master1)
-	sleep(10)
+	sleep(5)
