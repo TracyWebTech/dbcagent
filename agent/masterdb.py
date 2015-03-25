@@ -1,8 +1,6 @@
-from subprocess import call
-from subprocess import check_output
-import subprocess
 from db import DB
-
+from mysqltools import MySQLTools
+from comparison import Comparison
 
 class MasterDB(DB):
     def __init__(self, host, user, password, db, log_file, log_position):
@@ -47,7 +45,8 @@ class MasterDB(DB):
             rpl_user = "--rpl-user={}:{}".format(slave.user, slave.password)
 
             args = [master_data, slave_data, rpl_user, execute]
-            self.execute_slave("mysqlrpladmin", args)
+            mysqltools = MySQLTools()
+            mysqltools.execute("mysqlrpladmin", args)
 
     def check_all_slaves(self):
         for slave in self.slaves:
@@ -57,37 +56,11 @@ class MasterDB(DB):
                 slave.host)
 
             args = [master_data, slave_data]
-            self.execute_slave("mysqlrplcheck", args)
+            mysqltools = MySQLTools()
+            mysqltools.execute("mysqlrplcheck", args)
 
 
     def compare_all_slaves(self):
         for slave in self.slaves:
-            master_data = "--server1={}:{}@{}".format(self.user, self.password,
-                self.host)
-            slave_data = "--server2={}:{}@{}".format(slave.user, slave.password,
-                slave.host)
-            difftype = "--difftype=unified"
-            output_format = "--format=vertical"
-            databases = "{}:{}".format(self.db, slave.db)
-
-            args = [master_data, slave_data, difftype, output_format, databases]
-            self.execute_slave("mysqldbcompare", args)
-
-    def execute_slave(self, bin_command, args = []):
-        print("Running {} with:\n\t{}".format(bin_command, args))
-        command_to_run = [bin_command] + args
-
-        result = ''
-        try:
-            result = subprocess.Popen(command_to_run, stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE)
-            print("--"*50)
-            output, error = result.communicate()
-            errorcode = result.returncode
-            if errorcode==0:
-                print("OK")
-            else:
-                print("[Saida:\n{}\n]".format(output))
-            print("--"*50)
-        except:
-            print("Error in command exection")
+            comparison = Comparison()
+            comparison.compare(self, slave, self.db, slave.db)
