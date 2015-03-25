@@ -10,7 +10,8 @@ def health(master):
     master.health_all_slaves()
 
 def compare(master):
-    master.compare_all_slaves()
+    comp_list = master.compare_all_slaves()
+    print("Status: {}".format(comp_list))
 
 
 if __name__ == '__main__':

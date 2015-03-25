@@ -61,8 +61,10 @@ class MasterDB(DB):
 
 
     def compare_all_slaves(self):
+        comparison_list = []
         for slave in self.slaves:
             comparison = Comparison(self, slave)
             slave_data = comparison.get_comparison(self.db, slave.db)
+            comparison_list.append(slave_data)
 
-            print ("Status: {}".format(slave_data))
+        return comparison_list
