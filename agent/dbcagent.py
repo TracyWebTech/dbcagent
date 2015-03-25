@@ -44,4 +44,4 @@ if __name__ == '__main__':
 
     while True:
         compare(master1)
-	sleep(10)
+	sleep(5)

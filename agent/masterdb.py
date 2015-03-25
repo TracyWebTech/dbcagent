@@ -62,5 +62,7 @@ class MasterDB(DB):
 
     def compare_all_slaves(self):
         for slave in self.slaves:
-            comparison = Comparison()
-            comparison.compare(self, slave, self.db, slave.db)
+            comparison = Comparison(self, slave)
+            slave_data = comparison.get_comparison(self.db, slave.db)
+
+            print ("Status: {}".format(slave_data))

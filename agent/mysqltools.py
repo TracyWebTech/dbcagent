@@ -17,10 +17,9 @@ class MySQLTools:
         try:
             result = subprocess.Popen(command_to_run, stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE)
-            print("--"*50)
             output, error = result.communicate()
             errorcode = result.returncode
 
             return output, errorcode
         except:
-            print("Error in command exection")
+            print("Error in command execution")
