@@ -3,6 +3,10 @@ import re
 from db import DB
 from mysqltools import MySQLTools
 
+
+R_TABLES = re.compile("TABLE[\s]+([^\s]*)[\s]+(.*)")
+
+
 class Comparison:
     def __init__(self, master, slave):
         self.master = master
@@ -35,14 +39,14 @@ class Comparison:
         tables_status = self.compare(db1, db2)
         slave_data = self.slave.replication_info()
         database = {}
-        database[db2] = tables_status
+        database['name'] = db2
+        database['tables'] = tables_status
         slave_data['databases'] = [database]
 
         return slave_data
 
     def check_table_status(self, output_result):
-        r_tables = re.compile("TABLE[\s]+([^\s]*)[\s]+(.*)")
-        res = r_tables.findall(output_result)
+        res = R_TABLES.findall(output_result)
         for r in res:
             table_status = 'pass'
 
