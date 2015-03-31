@@ -1,7 +1,9 @@
 from time import sleep
+import json
+import requests
+
 from masterdb import MasterDB
 from db import DB
-import json
 
 
 def check(master):
@@ -49,3 +51,15 @@ if __name__ == '__main__':
         json_comp = json.dumps(comp_list, sort_keys=True)
         print("Status: {}".format(json_comp))
 	sleep(5)
+        url = "http://10.10.10.2:8000/monitor/send-status"
+        payload = json_comp
+
+        try:
+            headers = {'Content-type': 'application/json'}
+
+            r = requests.post(url, data=payload, headers=headers)
+
+            print("\n\tSever status: {}\n".format(r.status_code))
+
+        except Exception as e:
+            print("Erro {}".format(str(e)))
