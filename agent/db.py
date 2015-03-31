@@ -2,16 +2,17 @@ import json
 
 
 class DB(object):
-    def __init__(self, host, user, password, db, log_file, log_position):
+    def __init__(self, host, user, password, db, log_file, log_position,
+                 status='unknow'):
         self.host = host
         self.user = user
         self.password = password
         self.db = db
         self.log_file = log_file
         self.log_position = log_position
-        self.conn_status = "unknow"
+        self.conn_status = status
 
-    def set_conn_status(status):
+    def set_conn_status(self, conn_status):
         self.conn_status = conn_status
 
     def to_json(self):
@@ -19,6 +20,7 @@ class DB(object):
                 'host': self.host,
                 'user': self.user,
                 'password': self.password,
+                'status': self.conn_status,
                 'log_file': self.log_file,
                 'log_position': self.log_position,
               }
@@ -27,6 +29,7 @@ class DB(object):
     def replication_info(self):
         dic = {
                 'host': self.host,
+                'status': self.conn_status,
                 'log_file': self.log_file,
                 'log_position': self.log_position,
               }

@@ -6,7 +6,9 @@ from mysqltools import MySQLTools
 
 
 R_TABLES = re.compile("TABLE[\s]+([^\s]*)[\s]+(.*)")
+R_CONNECTION = re.compile("# server[\d] on ([^:]+):[\s]+...([^:|.]+)")
 
+# server2 on 10.10.10.4: ... connected.
 
 class Comparison:
     def __init__(self, master, slave):
@@ -32,6 +34,12 @@ class Comparison:
         mysqltools = MySQLTools()
         output_result, error_result = mysqltools.execute("mysqldbcompare", args)
 
+        if error_result != 0:
+            if self.is_database_connected(self.slave.host, output_result):
+                self.slave.set_conn_status('connected')
+            else:
+                self.slave.set_conn_status('ERROR')
+
         self.check_table_status(output_result)
 
         return self.tables
@@ -44,8 +52,16 @@ class Comparison:
         database['tables'] = tables_status
         database['date'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
         slave_data['databases'] = [database]
-
         return slave_data
+
+    def is_database_connected(self, db_host, output_result):
+        res = R_CONNECTION.findall(output_result)
+        for host, status in res:
+            if host == db_host:
+                if 'connected' in status:
+                    return 1;
+                else:
+                    return 0;
 
     def check_table_status(self, output_result):
         res = R_TABLES.findall(output_result)

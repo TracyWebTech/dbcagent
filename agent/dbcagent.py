@@ -31,7 +31,8 @@ if __name__ == '__main__':
     log_file2 = 'mysql-bin.000007';
     log_position2 = '1757';
 
-    master1 = MasterDB(host1, user, password, db, log_file1, log_position1)
+    master1 = MasterDB(host1, user, password, db, log_file1, log_position1,
+            status='connected')
     slave2 = DB(host1, user, password, db, log_file1, log_position1)
 
     master2 = MasterDB(host2, user, password, db, log_file2, log_position2)

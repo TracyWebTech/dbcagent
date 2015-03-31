@@ -3,8 +3,11 @@ from mysqltools import MySQLTools
 from comparison import Comparison
 
 class MasterDB(DB):
-    def __init__(self, host, user, password, db, log_file, log_position):
-        super(MasterDB, self).__init__(host, user, password, db, log_file, log_position)
+    def __init__(self, host, user, password, db, log_file, log_position,
+                 status='connected'):
+
+        super(MasterDB, self).__init__(host, user, password, db, log_file,
+                                       log_position, status)
         self.slaves = []
 
     def update_slaves(self):
