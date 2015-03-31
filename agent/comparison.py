@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 
 from db import DB
 from mysqltools import MySQLTools
@@ -41,6 +42,7 @@ class Comparison:
         database = {}
         database['name'] = db2
         database['tables'] = tables_status
+        database['date'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
         slave_data['databases'] = [database]
 
         return slave_data
