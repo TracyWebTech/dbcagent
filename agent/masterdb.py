@@ -2,6 +2,7 @@ from db import DB
 from mysqltools import MySQLTools
 from comparison import Comparison
 
+
 class MasterDB(DB):
     def __init__(self, host, user, password, db, log_file, log_position,
                  status='connected'):
@@ -29,7 +30,6 @@ class MasterDB(DB):
             content.append(str(slave))
         return "\n".join(content)
 
-
     def start_all_slaves(self):
         self.admin_all_slaves('start')
 
@@ -39,12 +39,12 @@ class MasterDB(DB):
     def health_all_slaves(self):
         self.admin_all_slaves('health')
 
-    def admin_all_slaves(self,execute):
+    def admin_all_slaves(self, execute):
         for slave in self.slaves:
             master_data = "--master={}:{}@{}".format(self.user, self.password,
-                self.host)
+                                                     self.host)
             slave_data = "--slave={}:{}@{}".format(slave.user, slave.password,
-                slave.host)
+                                                   slave.host)
             rpl_user = "--rpl-user={}:{}".format(slave.user, slave.password)
 
             args = [master_data, slave_data, rpl_user, execute]
@@ -54,14 +54,13 @@ class MasterDB(DB):
     def check_all_slaves(self):
         for slave in self.slaves:
             master_data = "--master={}:{}@{}".format(self.user, self.password,
-                self.host)
+                                                     self.host)
             slave_data = "--slave={}:{}@{}".format(slave.user, slave.password,
-                slave.host)
+                                                   slave.host)
 
             args = [master_data, slave_data]
             mysqltools = MySQLTools()
             mysqltools.execute("mysqlrplcheck", args)
-
 
     def compare_all_slaves(self):
         comparison_list = []

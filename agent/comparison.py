@@ -1,14 +1,12 @@
 import re
 from datetime import datetime
 
-from db import DB
 from mysqltools import MySQLTools
 
 
 R_TABLES = re.compile("TABLE[\s]+([^\s]*)[\s]+(.*)")
 R_CONNECTION = re.compile("# server[\d] on ([^:]+):[\s]+...([^:|.]+)")
 
-# server2 on 10.10.10.4: ... connected.
 
 class Comparison:
     def __init__(self, master, slave):
@@ -21,9 +19,11 @@ class Comparison:
         self.db2 = db2
 
         master_data = "--server1={}:{}@{}".format(self.master.user,
-            self.master.password, self.master.host)
+                                                  self.master.password,
+                                                  self.master.host)
         slave_data = "--server2={}:{}@{}".format(self.slave.user,
-            self.slave.password, self.slave.host)
+                                                 self.slave.password,
+                                                 self.slave.host)
         difftype = "--difftype=unified"
         output_format = "--format=vertical"
         databases = "{}:{}".format(self.db1, self.db2)
@@ -32,7 +32,8 @@ class Comparison:
         args = [master_data, slave_data, difftype, output_format, additional,
                 databases]
         mysqltools = MySQLTools()
-        output_result, error_result = mysqltools.execute("mysqldbcompare", args)
+        output_result, error_result = mysqltools.execute("mysqldbcompare",
+                                                         args)
 
         if error_result != 0:
             if self.is_database_connected(self.slave.host, output_result):
@@ -59,9 +60,9 @@ class Comparison:
         for host, status in res:
             if host == db_host:
                 if 'connected' in status:
-                    return 1;
+                    return 1
                 else:
-                    return 0;
+                    return 0
 
     def check_table_status(self, output_result):
         res = R_TABLES.findall(output_result)

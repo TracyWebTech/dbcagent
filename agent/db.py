@@ -17,22 +17,22 @@ class DB(object):
 
     def to_json(self):
         dic = {
-                'host': self.host,
-                'user': self.user,
-                'password': self.password,
-                'status': self.conn_status,
-                'log_file': self.log_file,
-                'log_position': self.log_position,
-              }
+            'host': self.host,
+            'user': self.user,
+            'password': self.password,
+            'status': self.conn_status,
+            'log_file': self.log_file,
+            'log_position': self.log_position,
+        }
         return json.dumps(dic)
 
     def replication_info(self):
         dic = {
-                'host': self.host,
-                'status': self.conn_status,
-                'log_file': self.log_file,
-                'log_position': self.log_position,
-              }
+            'host': self.host,
+            'status': self.conn_status,
+            'log_file': self.log_file,
+            'log_position': self.log_position,
+        }
         return dic
 
     def __str__(self):
