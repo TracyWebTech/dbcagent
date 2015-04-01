@@ -5,11 +5,12 @@ from comparison import Comparison
 
 class MasterDB(DB):
     def __init__(self, host, user, password, db, log_file, log_position,
-                 status='connected'):
+                 status='connected', token=''):
 
         super(MasterDB, self).__init__(host, user, password, db, log_file,
                                        log_position, status)
         self.slaves = []
+        self.token = token;
 
     def update_slaves(self):
         pass
@@ -70,6 +71,7 @@ class MasterDB(DB):
             comparison_list.append(slave_data)
 
         master_dict = self.replication_info()
+        master_dict['token'] = self.token;
         master_dict['slaves'] = comparison_list
 
         return master_dict
