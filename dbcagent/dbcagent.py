@@ -62,6 +62,10 @@ if __name__ == '__main__':
             r = requests.post(url, data=payload, headers=headers)
 
             print("\n\tSever status: {}\n".format(r.status_code))
+            
+            if r.status_code==500:
+                print(r.text)
+                break
 
         except Exception as e:
             print("Erro {}".format(str(e)))
