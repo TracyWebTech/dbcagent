@@ -1,0 +1,4 @@
+replica1: 10.10.10.3
+replica2: 10.10.10.4
+replica3: 10.10.10.5
+replica4: 10.10.10.6
