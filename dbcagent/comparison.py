@@ -34,7 +34,6 @@ class Comparison:
         mysqltools = MySQLTools()
         output_result, error_result = mysqltools.execute("mysqldbcompare",
                                                          args)
-
         if error_result != 0:
             if self.is_database_connected(self.slave.host, output_result):
                 self.slave.set_conn_status('connected')
@@ -47,13 +46,13 @@ class Comparison:
 
     def get_comparison(self, db1, db2):
         tables_status = self.compare(db1, db2)
-        slave_data = self.slave.replication_info()
+        master_data = self.master.replication_info()
         database = {}
         database['name'] = db2
         database['tables'] = tables_status
         database['date'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
-        slave_data['databases'] = [database]
-        return slave_data
+        master_data['databases'] = [database]
+        return master_data
 
     def is_database_connected(self, db_host, output_result):
         res = R_CONNECTION.findall(output_result)
