@@ -22,4 +22,4 @@ sudo sed -i 's/^bind-address/#bind-address/' $MYSQL_CONF_FILE
 sudo service mysql restart
 
 
-ln -s /vagrant ~/dbcagent
+ln -s /vagrant ~/dbcagent || true

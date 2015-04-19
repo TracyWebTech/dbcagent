@@ -19,8 +19,5 @@ then
 	$MASTER_PWD=$3
 fi
 
-
-mysql -u root -p'123456' -e "create database $DATABASE"
-mysql -u root -p'123456' -e "create user '$MASTER_USER'@'%' identified by '$MASTER_PWD';"
-mysql -u root -p'123456' -e "grant replication slave on *.* to '$MASTER_USER'@'%';"
-
+mysql -u root -p'123456' -e "CREATE DATABASE IF NOT EXISTS $DATABASE"
+mysql -u root -p'123456' -e "GRANT ALL ON *.* TO '$MASTER_USER'@'%' IDENTIFIED BY '$MASTER_PWD';"
