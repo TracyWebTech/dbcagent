@@ -38,7 +38,7 @@ To configure this environment, set the following configurations in each VM:
   vagrant ssh replica1
   ```
 
-  - Create configuration file for DBCAgent in `/tmp/config.ini` with the content:
+  - Create configuration file for DBCAgent in `/tmp/dbcagent_config.ini` with the content:
 
   ```
   [slave]
@@ -62,7 +62,7 @@ To configure this environment, set the following configurations in each VM:
   vagrant ssh replica2
   ```
 
-  - Create configuration file for DBCAgent in `/tmp/config.ini` with the content:
+  - Create configuration file for DBCAgent in `/tmp/dbcagent_config.ini` with the content:
 
   ```
   [slave]
@@ -86,7 +86,7 @@ To configure this environment, set the following configurations in each VM:
   vagrant ssh replica3
   ```
 
-  - Create configuration file for DBCAgent in `/tmp/config.ini` with the content:
+  - Create configuration file for DBCAgent in `/tmp/dbcagent_config.ini` with the content:
 
   ```
   [slave]
